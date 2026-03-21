@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Neeraj — Python Developer & ML Enthusiast</title>
 <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
 <style>
   :root {
     --bg: #050810;
@@ -116,31 +118,38 @@
   .cat-label { font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
 
   /* ════════════════════════════
-     CAROUSEL
+     SWIPER CAROUSEL (NEW STYLES)
   ════════════════════════════ */
   #projects { overflow: hidden; padding-bottom: 5rem; }
 
-  .carousel-outer {
-    position: relative;
+  .projectSwiper {
     width: 100%;
+    padding-top: 3rem;
+    padding-bottom: 4rem;
     overflow: hidden;
-    padding: 3rem 0 4rem;
-    cursor: grab;
-    user-select: none;
+    /* Soft fade edges so the side cards melt into the background slightly */
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 14%, black 86%, transparent 100%);
     mask-image: linear-gradient(to right, transparent 0%, black 14%, black 86%, transparent 100%);
   }
-  .carousel-outer:active { cursor: grabbing; }
 
-  .carousel-track {
-    display: flex;
-    gap: 2rem;
-    will-change: transform;
-    transition: transform 0.58s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* Target the swiper slides to create the scale and blur effect */
+  .projectSwiper .swiper-slide {
+    width: min(85vw, 520px); /* Card width */
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s ease, filter 0.5s ease;
+    transform: scale(0.85); /* Shrink non-active cards */
+    opacity: 0.4;
+    filter: blur(2px);
+  }
+
+  /* The active card snaps to the center and pops up */
+  .projectSwiper .swiper-slide-active {
+    transform: scale(1);
+    opacity: 1;
+    filter: blur(0);
   }
 
   .proj-card {
-    flex: 0 0 var(--card-w);
+    height: 100%;
     min-height: var(--card-h);
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.09);
@@ -152,16 +161,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /* inactive */
-    transform: scale(0.84) translateY(18px);
-    opacity: 0.38;
-    filter: blur(1px);
-    transition:
-      transform 0.58s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-      opacity   0.58s ease,
-      filter    0.58s ease,
-      border-color 0.4s ease,
-      box-shadow 0.4s ease;
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
   }
 
   .proj-card::before {
@@ -169,17 +169,14 @@
     background: radial-gradient(600px circle at var(--mouse-x,50%) var(--mouse-y,50%), rgba(255,255,255,0.07), transparent 50%);
     opacity: 0; transition: opacity 0.4s; pointer-events: none; z-index: 0;
   }
-  .proj-card.active:hover::before { opacity: 1; }
+  .proj-card:hover::before { opacity: 1; }
   .proj-card > * { position: relative; z-index: 1; }
 
-  .proj-card.active {
-    transform: scale(1) translateY(0);
-    opacity: 1; filter: blur(0);
+  /* Apply the bright borders/glow ONLY to the actively centered card */
+  .swiper-slide-active .proj-card {
     border-color: rgba(255,255,255,0.18);
     box-shadow: 0 0 0 1px rgba(0,229,255,0.1), 0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(0,229,255,0.07);
   }
-  .proj-card.prev { transform: scale(0.89) translateY(10px) translateX(28px); opacity: 0.52; filter: blur(0.5px); }
-  .proj-card.next { transform: scale(0.89) translateY(10px) translateX(-28px); opacity: 0.52; filter: blur(0.5px); }
 
   .proj-top {}
   .proj-tag { display: inline-block; padding: .3rem .85rem; background: rgba(0,229,255,.1); border: 1px solid rgba(0,229,255,.2); border-radius: 6px; font-size: .75rem; color: var(--cyan); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 1.2rem; font-weight: 600; }
@@ -188,18 +185,19 @@
   .proj-title { font-family: 'Cabinet Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: .8rem; line-height: 1.25; }
   .proj-desc { font-size: .95rem; color: var(--muted); line-height: 1.7; }
 
-  .proj-bottom {}
+  .proj-bottom { margin-top: 1.5rem; }
   .proj-stack { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.2rem; }
   .proj-chip { padding: .25rem .75rem; border-radius: 6px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); font-size: .8rem; color: var(--text); opacity: 0.75; }
   .proj-links { display: flex; gap: 1rem; }
   .proj-link { font-size: .88rem; font-weight: 500; color: var(--cyan); text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; transition: opacity .2s, transform .2s; }
   .proj-link:hover { opacity: .8; transform: translateX(3px); }
 
-  .carousel-dots { display: flex; justify-content: center; gap: 8px; margin-top: .5rem; }
-  .carousel-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); transition: all 0.35s ease; cursor: pointer; }
-  .carousel-dot.active { width: 26px; border-radius: 4px; background: linear-gradient(90deg, var(--cyan), var(--violet)); border-color: transparent; }
+  /* Custom styling for Swiper pagination to match your previous dots */
+  .swiper-pagination { position: relative; margin-top: 1rem; display: flex; justify-content: center; gap: 8px; }
+  .swiper-pagination-bullet { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); transition: all 0.35s ease; cursor: pointer; opacity: 1; }
+  .swiper-pagination-bullet-active { width: 26px; border-radius: 4px; background: linear-gradient(90deg, var(--cyan), var(--violet)); border-color: transparent; }
 
-  .swipe-hint { display: none; align-items: center; justify-content: center; gap: .5rem; font-size: .82rem; color: var(--muted); margin-top: 1.8rem; animation: hintFade 4s ease 1s both; }
+  .swipe-hint { display: none; align-items: center; justify-content: center; gap: .5rem; font-size: .82rem; color: var(--muted); margin-top: 1rem; animation: hintFade 4s ease 1s both; }
   @keyframes hintFade { 0%{opacity:0} 15%{opacity:1} 70%{opacity:1} 100%{opacity:0} }
   @media (hover: none) and (pointer: coarse) { .swipe-hint { display: flex; } }
 
@@ -267,29 +265,21 @@
     /* Skills */
     .skill-pill { padding: .5rem 1rem; font-size: .85rem; }
 
-    /* ── Projects Carousel (key section) ── */
+    /* ── Projects Carousel (Mobile Tweaks) ── */
     #projects { padding-bottom: 3rem; }
-    .carousel-outer {
+    .projectSwiper {
       padding: 1.5rem 0 2.5rem;
       -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
       mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
     }
-    .proj-card {
-      padding: 1.6rem 1.4rem;
-      border-radius: 18px;
-      min-height: auto;
-    }
-    .proj-card.active { box-shadow: 0 0 0 1px rgba(0,229,255,0.08), 0 20px 50px rgba(0,0,0,0.5); }
-    .proj-card.prev, .proj-card.next { transform: scale(0.88) translateY(8px); opacity: 0.4; }
+    .proj-card { padding: 1.6rem 1.4rem; border-radius: 18px; min-height: auto; }
+    .swiper-slide-active .proj-card { box-shadow: 0 0 0 1px rgba(0,229,255,0.08), 0 20px 50px rgba(0,0,0,0.5); }
     .proj-tag { font-size: .7rem; padding: .25rem .65rem; margin-bottom: .8rem; }
     .proj-title { font-size: 1.2rem; margin-bottom: .5rem; }
     .proj-desc { font-size: .88rem; line-height: 1.65; }
     .proj-stack { margin-bottom: .8rem; gap: .4rem; }
     .proj-chip { font-size: .72rem; padding: .2rem .55rem; }
     .proj-link { font-size: .82rem; }
-    .carousel-dots { gap: 6px; margin-top: .3rem; }
-    .carousel-dot { width: 5px; height: 5px; }
-    .carousel-dot.active { width: 22px; }
 
     /* Contact */
     .contact-card { padding: 2rem 1.25rem; }
@@ -339,7 +329,6 @@
 </nav>
 <div class="nav-overlay" id="navOverlay"></div>
 
-<!-- HERO -->
 <section id="hero">
   <div class="container hero-container">
     <div class="hero-content">
@@ -401,7 +390,6 @@
 
 <div class="divider-wrap"><div class="section-divider"></div></div>
 
-<!-- ABOUT -->
 <section id="about">
   <div class="container about-container">
     <div class="about-text-group">
@@ -421,7 +409,6 @@
 
 <div class="divider-wrap"><div class="section-divider"></div></div>
 
-<!-- SKILLS -->
 <section id="skills">
   <div class="container">
     <p class="section-label reveal">Tech Stack</p>
@@ -438,7 +425,6 @@
 
 <div class="divider-wrap"><div class="section-divider"></div></div>
 
-<!-- PROJECTS CAROUSEL -->
 <section id="projects">
   <div class="container">
     <p class="section-label reveal">Portfolio</p>
@@ -446,67 +432,74 @@
     <p class="section-sub reveal reveal-delay-2">Production-ready ML systems — from model training to deployed APIs.</p>
   </div>
 
-  <div class="carousel-outer" id="carouselOuter">
-    <div class="carousel-track" id="carouselTrack">
+  <div class="swiper projectSwiper">
+    <div class="swiper-wrapper">
 
-      <div class="proj-card" data-index="0">
-        <div class="proj-top">
-          <span class="proj-tag">NLP · RAG</span>
-          <h3 class="proj-title">Document RAG API</h3>
-          <p class="proj-desc">A Retrieval-Augmented Generation pipeline that lets users query documents intelligently. Leverages vector embeddings for semantic search and an LLM backend for context-grounded answers, served via a clean REST API.</p>
-        </div>
-        <div class="proj-bottom">
-          <div class="proj-stack"><span class="proj-chip">LangChain</span><span class="proj-chip">FastAPI</span><span class="proj-chip">Vector DB</span><span class="proj-chip">HuggingFace</span></div>
-          <div class="proj-links"><a href="#" class="proj-link">GitHub ↗</a></div>
+      <div class="swiper-slide">
+        <div class="proj-card">
+          <div class="proj-top">
+            <span class="proj-tag">NLP · RAG</span>
+            <h3 class="proj-title">Document RAG API</h3>
+            <p class="proj-desc">A Retrieval-Augmented Generation pipeline that lets users query documents intelligently. Leverages vector embeddings for semantic search and an LLM backend for context-grounded answers, served via a clean REST API.</p>
+          </div>
+          <div class="proj-bottom">
+            <div class="proj-stack"><span class="proj-chip">LangChain</span><span class="proj-chip">FastAPI</span><span class="proj-chip">Vector DB</span><span class="proj-chip">HuggingFace</span></div>
+            <div class="proj-links"><a href="#" class="proj-link">GitHub ↗</a></div>
+          </div>
         </div>
       </div>
 
-      <div class="proj-card" data-index="1">
-        <div class="proj-top">
-          <span class="proj-tag v">Computer Vision</span>
-          <h3 class="proj-title">Real-time Face Shape Predictor</h3>
-          <p class="proj-desc">A real-time CV system that classifies face shapes using facial landmark detection. Built with OpenCV and MediaPipe, delivering instant predictions through a live webcam feed with smooth frame-by-frame inference.</p>
-        </div>
-        <div class="proj-bottom">
-          <div class="proj-stack"><span class="proj-chip">OpenCV</span><span class="proj-chip">MediaPipe</span><span class="proj-chip">Python</span><span class="proj-chip">CNN</span></div>
-          <div class="proj-links"><a href="#" class="proj-link">GitHub ↗</a></div>
-        </div>
-      </div>
-
-      <div class="proj-card" data-index="2">
-        <div class="proj-top">
-          <span class="proj-tag p">Motion · CV</span>
-          <h3 class="proj-title">Simple Motion Capture</h3>
-          <p class="proj-desc">A lightweight motion capture system using pose estimation to track human body keypoints in real time. Designed for simplicity and speed, making motion analysis accessible without expensive hardware setups.</p>
-        </div>
-        <div class="proj-bottom">
-          <div class="proj-stack"><span class="proj-chip">MediaPipe</span><span class="proj-chip">OpenCV</span><span class="proj-chip">NumPy</span></div>
-          <div class="proj-links"><a href="#" class="proj-link">GitHub ↗</a></div>
+      <div class="swiper-slide">
+        <div class="proj-card">
+          <div class="proj-top">
+            <span class="proj-tag v">Computer Vision</span>
+            <h3 class="proj-title">Real-time Face Shape Predictor</h3>
+            <p class="proj-desc">A real-time CV system that classifies face shapes using facial landmark detection. Built with OpenCV and MediaPipe, delivering instant predictions through a live webcam feed with smooth frame-by-frame inference.</p>
+          </div>
+          <div class="proj-bottom">
+            <div class="proj-stack"><span class="proj-chip">OpenCV</span><span class="proj-chip">MediaPipe</span><span class="proj-chip">Python</span><span class="proj-chip">CNN</span></div>
+            <div class="proj-links"><a href="#" class="proj-link">GitHub ↗</a></div>
+          </div>
         </div>
       </div>
 
-      <div class="proj-card" data-index="3">
-        <div class="proj-top">
-          <span class="proj-tag">ML · FinTech</span>
-          <h3 class="proj-title">LoanPayback Prediction API</h3>
-          <p class="proj-desc">An end-to-end loan default prediction system integrating multiple ML classifiers (Logistic Regression, Decision Tree, Random Forest) with a FastAPI backend — real-time creditworthiness assessments via REST.</p>
+      <div class="swiper-slide">
+        <div class="proj-card">
+          <div class="proj-top">
+            <span class="proj-tag p">Motion · CV</span>
+            <h3 class="proj-title">Simple Motion Capture</h3>
+            <p class="proj-desc">A lightweight motion capture system using pose estimation to track human body keypoints in real time. Designed for simplicity and speed, making motion analysis accessible without expensive hardware setups.</p>
+          </div>
+          <div class="proj-bottom">
+            <div class="proj-stack"><span class="proj-chip">MediaPipe</span><span class="proj-chip">OpenCV</span><span class="proj-chip">NumPy</span></div>
+            <div class="proj-links"><a href="#" class="proj-link">GitHub ↗</a></div>
+          </div>
         </div>
-        <div class="proj-bottom">
-          <div class="proj-stack"><span class="proj-chip">FastAPI</span><span class="proj-chip">Scikit-learn</span><span class="proj-chip">Pandas</span><span class="proj-chip">Joblib</span></div>
-          <div class="proj-links"><a href="#" class="proj-link">GitHub ↗</a></div>
+      </div>
+
+      <div class="swiper-slide">
+        <div class="proj-card">
+          <div class="proj-top">
+            <span class="proj-tag">ML · FinTech</span>
+            <h3 class="proj-title">LoanPayback Prediction API</h3>
+            <p class="proj-desc">An end-to-end loan default prediction system integrating multiple ML classifiers (Logistic Regression, Decision Tree, Random Forest) with a FastAPI backend — real-time creditworthiness assessments via REST.</p>
+          </div>
+          <div class="proj-bottom">
+            <div class="proj-stack"><span class="proj-chip">FastAPI</span><span class="proj-chip">Scikit-learn</span><span class="proj-chip">Pandas</span><span class="proj-chip">Joblib</span></div>
+            <div class="proj-links"><a href="#" class="proj-link">GitHub ↗</a></div>
+          </div>
         </div>
       </div>
 
     </div>
+    <div class="swiper-pagination"></div>
   </div>
 
-  <div class="carousel-dots" id="carouselDots"></div>
   <div class="swipe-hint">← swipe to explore →</div>
 </section>
 
 <div class="divider-wrap"><div class="section-divider"></div></div>
 
-<!-- CONTACT -->
 <section id="contact">
   <div class="container">
     <p class="section-label reveal">Get In Touch</p>
@@ -527,6 +520,8 @@
 <footer>
   <p>Designed & built by <span>Neeraj</span> · 2025 · Python Developer & ML Enthusiast</p>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>
 const hamburger = document.getElementById('hamburger');
@@ -594,101 +589,29 @@ const revObs = new IntersectionObserver(entries => {
 revEls.forEach(el => revObs.observe(el));
 
 // ══════════════════════════════════════════
-// CAROUSEL
+// SWIPER INIT (Replaces Custom JS Carousel)
 // ══════════════════════════════════════════
-(function(){
-  const track  = document.getElementById('carouselTrack');
-  const outer  = document.getElementById('carouselOuter');
-  const dotsEl = document.getElementById('carouselDots');
-  const cards  = Array.from(track.querySelectorAll('.proj-card'));
-  const total  = cards.length;
-  let current  = 0;
-  let busy     = false;
-
-  // Build dots
-  cards.forEach((_, i) => {
-    const d = document.createElement('span');
-    d.className = 'carousel-dot' + (i===0 ? ' active' : '');
-    d.addEventListener('click', () => goTo(i));
-    dotsEl.appendChild(d);
-  });
-  const dots = dotsEl.querySelectorAll('.carousel-dot');
-
-  function cardWidth()  { return cards[0].getBoundingClientRect().width; }
-  function gapSize()    { return parseFloat(getComputedStyle(track).gap) || 32; }
-
-  function render(idx) {
-    // position track
-    const offset = idx * (cardWidth() + gapSize());
-    track.style.transform = `translateX(-${offset}px)`;
-
-    // class states
-    cards.forEach((c, i) => {
-      c.classList.remove('active','prev','next');
-      const d = i - idx;
-      if(d ===  0) c.classList.add('active');
-      else if(d === -1) c.classList.add('prev');
-      else if(d ===  1) c.classList.add('next');
-    });
-
-    // dots
-    dots.forEach((d,i) => d.classList.toggle('active', i===idx));
-  }
-
-  function goTo(idx) {
-    if(busy) return;
-    busy = true;
-    current = Math.max(0, Math.min(idx, total-1));
-    render(current);
-    setTimeout(() => { busy = false; }, 600);
-  }
-
-  // Set initial padding so first card is centred
-  function setTrackPadding() {
-    const vw = window.innerWidth;
-    const cw = cardWidth();
-    const side = (vw - cw) / 2;
-    track.style.paddingLeft  = side + 'px';
-    track.style.paddingRight = side + 'px';
-  }
-
-  // Init
-  setTrackPadding();
-  render(0);
-  window.addEventListener('resize', () => { setTrackPadding(); render(current); });
-
-  // ── Drag / Swipe ──
-  let startX = 0, isDragging = false, moved = false;
-  const THRESHOLD = 48;
-
-  function onStart(x) { startX = x; isDragging = true; moved = false; }
-  function onMove(x)  { if(!isDragging) return; if(Math.abs(x - startX) > 4) moved = true; }
-  function onEnd(x)   {
-    if(!isDragging) return;
-    isDragging = false;
-    const dx = x - startX;
-    if(Math.abs(dx) >= THRESHOLD) {
-      dx < 0 ? goTo(current + 1) : goTo(current - 1);
+const swiper = new Swiper('.projectSwiper', {
+  slidesPerView: 'auto',   // Lets the CSS width dictate the slide size
+  centeredSlides: true,    // Forces the active card to the exact middle
+  spaceBetween: 30,        // Gap between the cards
+  loop: false,             // Set to true if you want infinite swiping
+  grabCursor: true,        // Mouse shows grab hand
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true,
+  },
+  breakpoints: {
+    // Mobile tweak
+    320: {
+      spaceBetween: 20
+    },
+    // Desktop tweak
+    768: {
+      spaceBetween: 40
     }
   }
-
-  // Touch events
-  outer.addEventListener('touchstart', e => onStart(e.touches[0].clientX), { passive: true });
-  outer.addEventListener('touchmove',  e => onMove(e.touches[0].clientX),  { passive: true });
-  outer.addEventListener('touchend',   e => onEnd(e.changedTouches[0].clientX));
-
-  // Mouse drag
-  outer.addEventListener('mousedown',  e => onStart(e.clientX));
-  window.addEventListener('mousemove', e => { if(isDragging) onMove(e.clientX); });
-  window.addEventListener('mouseup',   e => { if(isDragging && moved) onEnd(e.clientX); isDragging = false; });
-  outer.addEventListener('click',      e => { if(moved) e.preventDefault(); }, true);
-
-  // Keyboard
-  document.addEventListener('keydown', e => {
-    if(e.key === 'ArrowRight') goTo(current + 1);
-    if(e.key === 'ArrowLeft')  goTo(current - 1);
-  });
-})();
+});
 </script>
 </body>
 </html>
