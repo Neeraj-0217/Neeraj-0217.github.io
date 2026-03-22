@@ -468,7 +468,7 @@
           <div class="proj-top">
             <span class="proj-tag p">Motion · CV</span>
             <h3 class="proj-title">Simple Motion Capture</h3>
-            <p class="proj-desc">A lightweight motion capture system using pose estimation to track human body keypoints in real time. Designed for simplicity and speed, making motion analysis accessible without expensive hardware setups.</p>
+            <p class="proj-desc">A lightweight motion capture system using pose estimation to track human body keypoints in real time and transfer the motion to a custom stickman in real-time. Designed for simplicity and speed with an impressive syncronized screen for export or analysis.</p>
           </div>
           <div class="proj-bottom">
             <div class="proj-stack"><span class="proj-chip">MediaPipe</span><span class="proj-chip">OpenCV</span><span class="proj-chip">NumPy</span></div>
@@ -482,7 +482,7 @@
           <div class="proj-top">
             <span class="proj-tag">ML · FinTech</span>
             <h3 class="proj-title">LoanPayback Prediction API</h3>
-            <p class="proj-desc">An end-to-end loan default prediction system integrating multiple ML classifiers (Logistic Regression, Decision Tree, Random Forest) with a FastAPI backend — real-time creditworthiness assessments via REST.</p>
+            <p class="proj-desc">An end-to-end loan default prediction system integrating multiple ML classifiers (Logistic Regression, Decision Tree, XGBoost) with a FastAPI backend — real-time creditworthiness assessments via REST.</p>
           </div>
           <div class="proj-bottom">
             <div class="proj-stack"><span class="proj-chip">FastAPI</span><span class="proj-chip">Scikit-learn</span><span class="proj-chip">Pandas</span><span class="proj-chip">Joblib</span></div>
@@ -589,27 +589,39 @@ const revObs = new IntersectionObserver(entries => {
 revEls.forEach(el => revObs.observe(el));
 
 // ══════════════════════════════════════════
-// SWIPER INIT (Replaces Custom JS Carousel)
+// SWIPER INIT
 // ══════════════════════════════════════════
 const swiper = new Swiper('.projectSwiper', {
-  slidesPerView: 'auto',   // Lets the CSS width dictate the slide size
-  centeredSlides: true,    // Forces the active card to the exact middle
-  spaceBetween: 30,        // Gap between the cards
-  loop: false,             // Set to true if you want infinite swiping
-  grabCursor: true,        // Mouse shows grab hand
+  slidesPerView: 'auto',
+  centeredSlides: true,
+  spaceBetween: 30,
+  loop: false,
+  grabCursor: true,
+  watchSlidesProgress: true,
+  speed: 550,
+
+  // Keyboard: arrow keys navigate when carousel is in viewport
+  keyboard: {
+    enabled: true,
+    onlyInViewport: true,
+  },
+
+  // Mousewheel / Trackpad: two-finger or scroll-wheel navigates slides
+  mousewheel: {
+    forceToAxis: true,
+    sensitivity: 1.2,
+    releaseOnEdges: true,
+    thresholdDelta: 6,
+  },
+
   pagination: {
     el: '.swiper-pagination',
     clickable: true,
   },
+
   breakpoints: {
-    // Mobile tweak
-    320: {
-      spaceBetween: 20
-    },
-    // Desktop tweak
-    768: {
-      spaceBetween: 40
-    }
+    320: { spaceBetween: 20 },
+    768: { spaceBetween: 40 },
   }
 });
 </script>
